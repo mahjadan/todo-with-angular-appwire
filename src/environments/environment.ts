@@ -4,9 +4,10 @@
 
 export const environment = {
   production: false,
-  APP_ENDPOINT: "https://demo.appwrite.io/v1",
-  APP_PROJECT: "6062f9c2c09ce",
-  APP_COLLECTION_ID:"606621a04837c"
+  // APP_ENDPOINT: 'https://demo.appwrite.io/v1',
+  APP_ENDPOINT: 'http://localhost:9999/v1',
+  APP_PROJECT: 'MasjidInfo-ProjectID',
+  APP_COLLECTION_ID: '63b607e51752534e82cb',
 };
 
 /*
