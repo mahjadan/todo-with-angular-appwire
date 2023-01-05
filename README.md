@@ -4,16 +4,14 @@
 
 A simple todo app built with Appwrite and Angular
 
-This code was forked and adapter with the new version of Appwire `1.2.0` and Web Sdk `v10.2.0`
-
-If you simply want to try out the App, go ahead and check out the demo at https://appwrite-todo-with-angular.vercel.app/
+This repo was forked from [appwrite/demo-todo-with-angular](https://github.com/appwrite/demo-todo-with-angular)  and adapter with the new version of Appwire `1.2.0` and Web Sdk `v10.2.0`
 
 ## 🎬 Getting Started
 
 ### 🤘 Install Appwrite 
-Follow our simple [Installation Guide](https://appwrite.io/docs/installation) to get Appwrite up and running in no time. You can either deploy Appwrite on your local machine or, on any cloud provider of your choice. 
+Follow Appwrite simple [Installation Guide](https://appwrite.io/docs/installation) to get Appwrite up and running in no time. You can either deploy Appwrite on your local machine or, on any cloud provider of your choice. 
 
-This App using this version of Appwire
+To run Appwrite locally, run the following command (this App using this version of Appwire 1.2.0)
 ```
  docker run -it --rm \
     --volume /var/run/docker.sock:/var/run/docker.sock \
@@ -28,7 +26,7 @@ We need to make a few configuration changes to your Appwrite server.
 
 1. Install it locally , just follow the installation steps using `localhost` as the hostname and choose a port if you don't want to run it on port `80` i choose `9999`.
 
-2. After the installation is done, access Appwrite on http://localhost:9999 or whatever port you choose.
+2. After the installation is done, access Appwrite on http://localhost:9999 or whatever port you chose.
 3. need to signup ( this will be the admin user)
 4. create a database, you can also customize the database ID.
 5. create a collection, you can also customize the collection ID.
