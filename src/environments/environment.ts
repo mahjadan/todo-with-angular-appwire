@@ -6,8 +6,9 @@ export const environment = {
   production: false,
   // APP_ENDPOINT: 'https://demo.appwrite.io/v1',
   APP_ENDPOINT: 'http://localhost:9999/v1',
-  APP_PROJECT: 'MasjidInfo-ProjectID',
-  APP_COLLECTION_ID: '63b607e51752534e82cb',
+  APP_PROJECT_ID: 'Masjid-demo-ID',
+  APP_DATABASE_ID: 'test-db-ID',
+  APP_COLLECTION_ID: 'todo-demo-ID',
 };
 
 /*
