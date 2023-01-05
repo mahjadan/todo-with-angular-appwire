@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { Models } from 'appwrite';
+import { Models, Permission, Query, Role } from 'appwrite';
 import { Todo } from 'src/app/models/Todo';
 import { Api } from 'src/app/helpers/api';
 import { Server } from '../../utils/config';
@@ -19,9 +19,7 @@ export namespace Todos {
 
   export class Add {
     static readonly type = '[Todo] AddTodo';
-    constructor(
-      public payload: { data: Todo; read: string[]; write: string[] }
-    ) {}
+    constructor(public payload: { data: Todo; permissions: string[] }) {}
   }
 
   export class Update {
@@ -30,8 +28,7 @@ export namespace Todos {
       public payload: {
         documentId: string;
         data: Todo;
-        read: string[];
-        write: string[];
+        permissions: string[];
       }
     ) {}
   }
@@ -61,8 +58,10 @@ export class TodoState {
     action: Todos.Fetch
   ) {
     try {
-      let todos = await Api.provider().database.listDocuments(
+      let todos = await Api.db().listDocuments(
+        Server.databaseID,
         Server.collectionID
+        // [Query.equal('isComplete', true)]
       );
       setState({
         todos: todos.documents,
@@ -85,13 +84,13 @@ export class TodoState {
     action: Todos.Add
   ) {
     try {
-      let { data, read, write } = action.payload;
-      let todo = await Api.provider().database.createDocument(
+      let { data, permissions } = action.payload;
+      let todo = await Api.db().createDocument(
+        Server.databaseID,
         Server.collectionID,
-        'unique()',
+        Api.uniqueId(),
         data,
-        read,
-        write
+        permissions
       );
       const todos = getState().todos;
       patchState({
@@ -114,19 +113,29 @@ export class TodoState {
     { patchState, getState, dispatch }: StateContext<TodoStateModel>,
     action: Todos.Update
   ) {
-    let { documentId, data, read, write } = action.payload;
+    let { documentId, data, permissions } = action.payload;
     try {
-      let updatedTodo = await Api.provider().database.updateDocument(
+      console.log(
+        'update info ',
+        Server.databaseID,
         Server.collectionID,
         documentId,
-        data,
-        read,
-        write
+        data
+      );
+
+      let updatedTodo = await Api.db().updateDocument(
+        Server.databaseID,
+        Server.collectionID,
+        documentId,
+        {
+          content: data.content,
+          isComplete: data.isComplete,
+        },
+        []
+        // permissions,
       );
       let todoList = [...getState().todos];
-      const index = todoList.findIndex(
-        (todo) => todo.$id === updatedTodo.$id
-      );
+      const index = todoList.findIndex((todo) => todo.$id === updatedTodo.$id);
       if (index !== -1) {
         todoList[index] = updatedTodo;
         patchState({
@@ -152,7 +161,8 @@ export class TodoState {
   ) {
     let { documentId } = action.payload;
     try {
-      await Api.provider().database.deleteDocument(
+      await Api.db().deleteDocument(
+        Server.databaseID,
         Server.collectionID,
         documentId
       );

@@ -8,7 +8,7 @@ import { GlobalActions } from '../global';
 /* State Model */
 @Injectable()
 export class AccountStateModel {
-  account: Models.User<{}>;
+  account: Models.Account<{}>;
   session: Models.Session;
 }
 
@@ -69,8 +69,8 @@ export class AccountState {
   ) {
     let { email, password } = action.payload;
     try {
-      await Api.provider().account.createSession(email, password);
-      let account = await Api.provider().account.get();
+      await Api.account().createEmailSession(email, password);
+      let account = await Api.account().get();
       patchState({
         account: account,
       });
@@ -94,13 +94,13 @@ export class AccountState {
   ) {
     let { email, password, name } = action.payload;
     try {
-      let account = await Api.provider().account.create(
-        'unique()',
+      let account = await Api.account().create(
+        Api.uniqueId(),
         email,
         password,
         name
       );
-      let session = await Api.provider().account.createSession(email, password);
+      let session = await Api.account().createEmailSession(email, password);
       patchState({
         account,
         session,
@@ -124,7 +124,7 @@ export class AccountState {
     action: Account.FetchAccount
   ) {
     try {
-      let account = await Api.provider().account.get();
+      let account = await Api.account().get();
       patchState({
         account: account,
       });
@@ -146,13 +146,13 @@ export class AccountState {
     action: Account.Logout
   ) {
     try {
-      await Api.provider().account.deleteSession('current');
+      await Api.account().deleteSession('current');
       patchState({
         account: null,
         session: null,
       });
       dispatch(new Account.Redirect({ path: '' }));
-    } catch (e: any) {      
+    } catch (e: any) {
       console.log('Error Loggin Out');
       dispatch(
         new GlobalActions.setAlert({

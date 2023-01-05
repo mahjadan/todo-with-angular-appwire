@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
+import { Permission, Role } from 'appwrite';
 import { Observable } from 'rxjs';
 import { Todo } from 'src/app/models/Todo';
 import { Account, AccountState, Todos, TodoState } from 'src/app/store';
@@ -11,7 +12,6 @@ import { Account, AccountState, Todos, TodoState } from 'src/app/store';
   styleUrls: ['./todo.component.css'],
 })
 export class TodoComponent implements OnInit {
-  
   @Select(TodoState.getTodos) todos$: Observable<Todo[]>;
 
   addTodoForm: FormGroup;
@@ -21,8 +21,8 @@ export class TodoComponent implements OnInit {
       content: ['', [Validators.required]],
     });
   }
-  
-  ngOnInit() {    
+
+  ngOnInit() {
     this.store.dispatch(new Todos.Fetch());
   }
 
@@ -32,9 +32,15 @@ export class TodoComponent implements OnInit {
       isComplete: false,
     } as Todo;
     const userId = this.store.selectSnapshot(AccountState.userId);
-    const read = [`user:${userId}`];
-    const write = read;
-    this.store.dispatch(new Todos.Add({ data, read, write }));
+    const permissions: string[] = [
+      Permission.read(Role.any()), // Anyone can view this document
+      // Permission.update(Role.team('writers')), // Writers can update this document
+      // Permission.update(Role.team('admin')), // Admins can update this document
+      Permission.update(Role.user(userId)), // Admins can update this document
+      Permission.delete(Role.user(userId)), // User 5c1f88b42259e can delete this document
+      // Permission.delete(Role.team('admin')), // Admins can delete this document
+    ];
+    this.store.dispatch(new Todos.Add({ data, permissions }));
   }
 
   handleLogout() {

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { Permission, Role } from 'appwrite';
 import { Todo } from 'src/app/models/Todo';
 import { AccountState, Todos } from 'src/app/store';
 
@@ -22,15 +23,23 @@ export class TodoItemComponent implements OnInit {
 
   toggleTodo(documentId: string, todo: Todo) {
     console.log(documentId);
-    console.log("Toggle Todo ")
+    console.log('Toggle Todo ');
+    console.log('todo before update:', todo);
+
     const data: Todo = {
       ...todo,
       isComplete: !todo.isComplete,
     };
-
+    console.log('todo after update:', data);
     let userId = this.store.selectSnapshot(AccountState.userId);
-    const read = [`user:${userId}`];
-    const write = read;
-    this.store.dispatch(new Todos.Update({ documentId, data, read, write }));
+    const permissions = [
+      Permission.read(Role.any()), // Anyone can view this document
+      Permission.update(Role.team('writers')), // Writers can update this document
+      Permission.update(Role.team('admin')), // Admins can update this document
+      Permission.update(Role.user(userId)), // Admins can update this document
+      Permission.delete(Role.user(userId)), // User 5c1f88b42259e can delete this document
+      Permission.delete(Role.team('admin')), // Admins can delete this document
+    ];
+    this.store.dispatch(new Todos.Update({ documentId, data, permissions }));
   }
 }
