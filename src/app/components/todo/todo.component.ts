@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
-import { Permission, Role } from 'appwrite';
+import { Models, Permission, Role } from 'appwrite';
 import { Observable } from 'rxjs';
 import { Todo } from 'src/app/models/Todo';
 import { Account, AccountState, Todos, TodoState } from 'src/app/store';
@@ -14,6 +14,7 @@ import { Account, AccountState, Todos, TodoState } from 'src/app/store';
 export class TodoComponent implements OnInit {
   @Select(TodoState.getTodos) todos$: Observable<Todo[]>;
 
+  @Select(AccountState.account) account$: Observable<Models.Account<{}>>;
   addTodoForm: FormGroup;
 
   constructor(private store: Store, private formbuilder: FormBuilder) {

@@ -2,6 +2,20 @@
   class="container h-screen max-h-screen px-3 max-w-xl mx-auto flex flex-col"
 >
   <div class="my-auto p-16 rounded-lg text-center">
+    <div class="text-left font-bold text-1xl md:text-1xl lg:text-1xl" 
+    *ngIf="account$ |async as account">
+     <p>user details:
+      id: {{account.$id }}<br/>
+      email: {{account.email }}<br/>
+      verficiation: {{account.emailVerification }}<br/>
+      name: {{account.name }}<br/>
+      phone: {{account.phone }}<br/>
+      registartion: {{account.registration }}<br/>
+      status: {{account.status}}<br/>
+      createdAt: {{account.$createdAt}}<br/>
+      passwordUpdate: {{account.passwordUpdate }}<br/>
+      </p>
+    </div>
     <div class="font-bold text-3xl md:text-5xl lg:text-6xl">
       📝 <br />
       &nbsp; toTooooDoooos

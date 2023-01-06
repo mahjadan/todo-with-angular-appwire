@@ -56,7 +56,10 @@ export class AccountState {
   static userId(state: AccountStateModel) {
     return state.account.$id;
   }
-
+  @Selector()
+  static account(state: AccountStateModel) {
+    return state.account;
+  }
   @Selector()
   static isAuthenticated(state: AccountStateModel): boolean {
     return !!state.account;
